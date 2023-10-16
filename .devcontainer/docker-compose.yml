@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+    web:
+        image: nginx:latest
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d:ro
+            - ./nginx/ssl:/etc/nginx/ssl:ro
+            - ./nginx/snippets:/etc/nginx/snippets:ro
+            - ../development:/var/www/html:ro
+        ports:
+            - 80:80
+            - 443:443
+        restart: always
+        depends_on:
+            - php
+            - mariadb
+        networks:
+            - localhost-dev
+    php:
+        build:
+            context: ./php/images
+            dockerfile: Dockerfile
+        volumes:
+            - ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
+            - ../development:/var/www/html:rw
+        depends_on:
+            - mariadb
+        networks:
+            - localhost-dev
+    mariadb:
+        image: mariadb:10.6
+        env_file: ../.env
+        volumes:
+            - mariadb-data:/var/lib/mysql
+            - ./mariadb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+        networks:
+            - localhost-dev
+
+volumes:
+  mariadb-data:
+
+networks:
+  localhost-dev:
+    driver: bridge

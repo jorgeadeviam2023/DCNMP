@@ -1,0 +1,23 @@
+{
+    "name": "PHP Development",
+    "forwardPorts": [80, 443],
+    "dockerComposeFile": "./docker-compose.yml",
+    "service": "php",
+    "workspaceFolder": "/var/www/html",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "[php]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+                }
+            },
+            "extensions": [
+                "xdebug.php-pack",
+                "bmewburn.vscode-intelephense-client"
+            ]
+        }
+    },
+    "shutdownAction": "stopCompose"
+}
+  
